@@ -31,7 +31,7 @@ public class MaxCode {
         List<Integer> value = new ArrayList<>();
         for (int i = index; i < gr.length; i++) {
             value.add(0);
-            for (int j = index; j < gr.length; j++) {
+            for (int j = 0; j < gr.length; j++) {
                 if (gr[i][j] == 1) {
                     value.set(i - index, value.get(i - index) + 1);
                 }

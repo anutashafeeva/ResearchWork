@@ -16,27 +16,16 @@ public class Main {
 
     private void app() throws IOException {
 
-        Scanner sc = new Scanner(System.in);
-
         BufferedReader in = new BufferedReader(new FileReader("input.txt"));
-        BufferedReader in1 = new BufferedReader(new FileReader("input.txt"));
-        BufferedReader in2 = new BufferedReader(new FileReader("input.txt"));
-        PrintWriter outSameGraphs = new PrintWriter("outputSameGraphs.txt");
-        PrintWriter out = new PrintWriter("output.txt");
         PrintWriter outMaxMatrixCode = new PrintWriter("outputMaxMatrixCode.txt");
-        BufferedReader inMaxCode1 = new BufferedReader(new FileReader("outputMaxMatrixCode.txt"));
-        BufferedReader inMaxCode2 = new BufferedReader(new FileReader("outputMaxMatrixCode.txt"));
         PrintWriter outMin = new PrintWriter("min.txt");
         PrintWriter outMax = new PrintWriter("max.txt");
 
-        System.out.println("Введите количество вершин исходных графов");
-        int sz = sc.nextInt();
-
         startTime = System.currentTimeMillis();
 
-        //TreeMap<String, Integer> allResults = new TreeMap<>();
+        int max = 0;
+        int min = 0;
         String s = in.readLine();
-        Integer integer = 1;
         while (s != null) {
             MatrixAndG6 mg6 = new MatrixAndG6();
             int[][] matrix = mg6.g6ToMatrix(s);
@@ -50,15 +39,18 @@ public class Main {
                 listSubgr.add(maxC.last());
             }
 
+            outMaxMatrixCode.print(s + " - ");
             for (String subgraphs : listSubgr) {
                 outMaxMatrixCode.print(subgraphs + " ");
             }
             outMaxMatrixCode.println();
 
             if (listSubgr.size() == 1){
+                min++;
                 outMin.println(s + " - " + listSubgr.first());
             }
             else if (listSubgr.size() == matrix.length){
+                max++;
                 outMax.print(s + " - ");
                 for (String subgraphs : listSubgr) {
                     outMax.print(subgraphs + " ");
@@ -67,62 +59,14 @@ public class Main {
             }
 
             s = in.readLine();
-            integer++;
-            if (integer % 1000 == 0)
-                System.out.println(integer);
         }
 
-        out.close();
+        System.out.println("max = " + max);
+        System.out.println("min = " + min);
+
         in.close();
         outMaxMatrixCode.close();
         outMax.close();
         outMin.close();
-
-        TreeMap<String, TreeSet<String>> sameGraphs = new TreeMap<>();
-        String s1 = inMaxCode1.readLine();
-        String graph1 = in1.readLine();
-        while (s1 != null){
-            String s2 = inMaxCode2.readLine();
-            String graph2 = in2.readLine();
-            while (s2 != null){
-                if (s1.equals(s2) && !graph1.equals(graph2)){
-                    if (sameGraphs.containsKey(s1)){
-                        if (!sameGraphs.get(s1).contains(graph1)){
-                            TreeSet<String> newSet= sameGraphs.get(s1);
-                            newSet.add(graph1);
-                            sameGraphs.replace(s1, newSet);
-                        }
-                        if (!sameGraphs.get(s1).contains(graph2)){
-                            TreeSet<String> newSet= sameGraphs.get(s1);
-                            newSet.add(graph2);
-                            sameGraphs.replace(s1, newSet);
-                        }
-                    } else {
-                        TreeSet<String> newSet= sameGraphs.get(s1);
-                        newSet.add(graph1);
-                        newSet.add(graph2);
-                        sameGraphs.put(s1, newSet);
-                    }
-                }
-
-                s2 = inMaxCode2.readLine();
-                graph2 = in2.readLine();
-            }
-
-            s1 = inMaxCode1.readLine();
-            graph1 = in1.readLine();
-        }
-
-        for (String code: sameGraphs.keySet()) {
-            outSameGraphs.print(code + " - ");
-            for (String graphs: sameGraphs.get(code)) {
-                outSameGraphs.print(graphs + " ");
-            }
-            outSameGraphs.println();
-        }
-
-        in.close();
-        in2.close();
-        outSameGraphs.close();
     }
 }
